@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js and pnpm
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
@@ -21,7 +21,13 @@ jobs:
           cache: "pnpm"
 
       - name: Install pnpm
-        run: corepack enable && pnpm install --frozen-lockfile
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
+          pnpm --version  # Verify installation
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Authenticate with GitHub Packages
         run: echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
